@@ -1,0 +1,157 @@
+====================================================================
+  CARTA DIGITAL — Instrucciones para desarrollo local
+====================================================================
+
+REQUISITOS
+----------
+- Node.js >= 18
+- pnpm (instalar con: npm install -g pnpm)
+- Python >= 3.11
+- Docker + Docker Compose (para PostgreSQL)
+
+====================================================================
+  1. LEVANTAR LA BASE DE DATOS
+====================================================================
+
+docker compose up -d
+
+Esto levanta PostgreSQL 16 en localhost:5432 con:
+  Usuario: menu_user
+  Password: menu_pass
+  Base:    menu_db
+
+====================================================================
+  2. INSTALAR DEPENDENCIAS
+====================================================================
+
+# Frontend (desde la raíz del proyecto)
+pnpm install
+
+# Backend
+cd backend
+python3 -m venv .venv
+source .venv/bin/activate
+pip install .
+cd ..
+
+====================================================================
+  3. CORRER MIGRACIONES (backend)
+====================================================================
+
+cd backend
+source .venv/bin/activate
+alembic upgrade head
+cd ..
+
+====================================================================
+  4. INICIAR EL BACKEND (puerto 8000)
+====================================================================
+
+cd backend
+source .venv/bin/activate
+uvicorn app.main:app --reload
+cd ..
+
+====================================================================
+  5. INICIAR LA CARTA PÚBLICA (puerto 5173)
+====================================================================
+
+pnpm dev:carta
+
+Acceso: http://localhost:5173
+Mobile-first, solo lectura. Muestra productos con status=active
+agrupados por categoría. Sin login.
+
+====================================================================
+  6. INICIAR EL PANEL DE ADMINISTRACIÓN (puerto 5174)
+====================================================================
+
+pnpm dev:admin
+
+Acceso: http://localhost:5174
+CRUD completo protegido con JWT.
+Credenciales por defecto:
+  Usuario: admin
+  Password: admin123
+
+====================================================================
+  BUILD PARA PRODUCCIÓN
+====================================================================
+
+pnpm build:carta    # genera apps/carta/dist
+pnpm build:admin    # genera apps/admin/dist
+
+====================================================================
+  VARIABLES DE ENTORNO
+====================================================================
+
+Backend (.env en backend/):
+  DATABASE_URL     URL de PostgreSQL
+  JWT_SECRET       Secreto para firmar tokens JWT
+  ADMIN_USERNAME   Usuario del panel (default: admin)
+  ADMIN_PASSWORD   Contraseña del panel (default: admin123)
+  R2_ACCESS_KEY    Cloudflare R2 access key (para uploads)
+  R2_SECRET_KEY    Cloudflare R2 secret key
+  R2_ENDPOINT      Endpoint de R2
+  R2_BUCKET        Nombre del bucket
+  R2_PUBLIC_URL    URL pública del bucket
+
+Frontend (.env en apps/carta o apps/admin):
+  VITE_API_URL     URL del backend (default: http://localhost:8000)
+
+====================================================================
+  ENDPOINTS DEL BACKEND
+====================================================================
+
+Categorías
+  GET    /categories
+  POST   /categories
+  PATCH  /categories/{id}
+  DELETE /categories/{id}           (409 si tiene productos)
+
+Productos
+  GET    /products?category_id=&status=
+  GET    /products/{id}
+  POST   /products
+  PATCH  /products/{id}
+  DELETE /products/{id}             (hard delete)
+
+Asociaciones Producto-Adicional
+  POST   /products/{id}/addons
+  DELETE /products/{id}/addons/{addon_id}
+
+Adicionales
+  GET    /addons
+  POST   /addons
+  PATCH  /addons/{id}
+  DELETE /addons/{id}               (409 si está en uso)
+
+Uploads
+  POST   /uploads/presign           (devuelve URL prefirmada de R2)
+
+Auth
+  POST   /auth/login                (devuelve JWT)
+
+====================================================================
+  ESTRUCTURA DEL PROYECTO
+====================================================================
+
+/
+├── docker-compose.yml
+├── pnpm-workspace.yaml
+├── package.json
+├── backend/                FastAPI + SQLModel + PostgreSQL
+│   ├── app/
+│   │   ├── main.py
+│   │   ├── db.py
+│   │   ├── schemas.py
+│   │   ├── models/         Category, Product, AddOn, ProductAddOn
+│   │   └── routers/        categories, products, addons, uploads, auth
+│   └── alembic/            Migraciones
+├── packages/
+│   ├── types/              Tipos TypeScript compartidos
+│   ├── api-client/         Funciones fetch tipadas
+│   └── ui/                 Componentes shadcn/ui compartidos
+├── apps/
+│   ├── carta/              App pública, solo lectura, mobile-first
+│   └── admin/              Panel CRUD con auth JWT
