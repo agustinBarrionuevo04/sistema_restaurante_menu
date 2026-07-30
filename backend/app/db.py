@@ -1,12 +1,12 @@
 import os
+from dotenv import load_dotenv
 from sqlmodel import create_engine, SQLModel, Session
 
-DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "postgresql://menu_user:menu_pass@localhost:5432/menu_db",
-)
+load_dotenv()
 
-engine = create_engine(DATABASE_URL, echo=False)
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./menu.db")
+
+engine = create_engine(DATABASE_URL, echo=False, connect_args={"check_same_thread": False})
 
 
 def init_db():

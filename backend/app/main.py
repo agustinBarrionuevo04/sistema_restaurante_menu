@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from app.db import init_db
 from app.routers import categories, products, addons, uploads, auth
@@ -33,6 +34,10 @@ app.include_router(products.router)
 app.include_router(addons.router)
 app.include_router(uploads.router)
 app.include_router(auth.router)
+
+static_dir = os.path.join(os.path.dirname(__file__), "static")
+os.makedirs(static_dir, exist_ok=True)
+app.mount("/uploads/local", StaticFiles(directory=static_dir), name="static")
 
 
 @app.get("/health")

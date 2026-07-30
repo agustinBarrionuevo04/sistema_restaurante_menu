@@ -172,6 +172,32 @@ export function presignUpload(data: PresignRequest): Promise<PresignResponse> {
   });
 }
 
+export async function uploadImage(file: File): Promise<PresignResponse> {
+  const token = getToken();
+  const headers: Record<string, string> = {};
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const res = await fetch(`${BASE_URL}/uploads/local`, {
+    method: "POST",
+    headers,
+    body: formData,
+  });
+
+  if (!res.ok) {
+    const detail = await res.json().catch(() => ({}));
+    throw new Error(
+      (detail as { detail?: string }).detail ?? `Error ${res.status}`
+    );
+  }
+
+  return res.json();
+}
+
 // Auth
 export function login(data: LoginRequest): Promise<TokenResponse> {
   return request<TokenResponse>("/auth/login", {

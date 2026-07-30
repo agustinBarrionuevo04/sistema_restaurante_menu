@@ -19,7 +19,7 @@ target_metadata = SQLModel.metadata
 def get_url():
     return os.getenv(
         "DATABASE_URL",
-        "postgresql://menu_user:menu_pass@localhost:5432/menu_db",
+        "sqlite:///./menu.db",
     )
 
 

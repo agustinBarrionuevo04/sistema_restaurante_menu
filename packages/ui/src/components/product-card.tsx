@@ -10,7 +10,7 @@ interface ProductCardProps {
 }
 
 function addonPrice(addon: ProductAddOn): number {
-  return addon.price_override ?? addon.addon.default_price;
+  return Number(addon.price_override ?? addon.addon.default_price);
 }
 
 export function ProductCard({ product, className }: ProductCardProps) {

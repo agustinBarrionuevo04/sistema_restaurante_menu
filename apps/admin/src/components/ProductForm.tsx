@@ -7,7 +7,7 @@ import {
   updateProduct,
   addAddOnToProduct,
   removeAddOnFromProduct,
-  presignUpload,
+  uploadImage,
 } from "@menu/api-client";
 import type { Category, AddOn, Product, ProductCreate } from "@menu/types";
 import { Button, Input } from "@menu/ui";
@@ -56,15 +56,7 @@ export default function ProductForm({ product, onSuccess, onCancel }: Props) {
 
     setUploading(true);
     try {
-      const { upload_url, public_url } = await presignUpload({
-        filename: file.name,
-        content_type: file.type,
-      });
-      await fetch(upload_url, {
-        method: "PUT",
-        body: file,
-        headers: { "Content-Type": file.type },
-      });
+      const { public_url } = await uploadImage(file);
       setImageUrl(public_url);
     } catch (err) {
       setError("Error al subir imagen");
