@@ -1,5 +1,11 @@
 export type ProductStatus = "active" | "suspended";
 
+export type LayoutVariant = "list" | "grid" | "carousel";
+
+export interface AppSettings {
+  layout: LayoutVariant;
+}
+
 export interface Category {
   id: string;
   name: string;

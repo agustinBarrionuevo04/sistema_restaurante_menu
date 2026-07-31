@@ -14,6 +14,7 @@ import type {
   PresignResponse,
   TokenResponse,
   LoginRequest,
+  AppSettings,
 } from "@menu/types";
 
 const BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
@@ -202,6 +203,18 @@ export async function uploadImage(file: File): Promise<PresignResponse> {
 export function login(data: LoginRequest): Promise<TokenResponse> {
   return request<TokenResponse>("/auth/login", {
     method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+// Settings
+export function getSettings(): Promise<AppSettings> {
+  return request<AppSettings>("/settings");
+}
+
+export function updateSettings(data: AppSettings): Promise<AppSettings> {
+  return request<AppSettings>("/settings", {
+    method: "PUT",
     body: JSON.stringify(data),
   });
 }
