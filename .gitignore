@@ -10,3 +10,8 @@ __pycache__
 *.db
 *.sqlite3
 backend/app/static/
+
+# Prototipo de referencia (no se trackea)
+carta-digital/
+# Auxiliar de trabajo local
+urls_imagenes.txt

@@ -5,6 +5,7 @@ from typing import Optional
 from pydantic import BaseModel
 
 from app.models.product import ProductStatus
+from app.models.app_settings import MenuLayout
 
 
 class CategoryCreate(BaseModel):
@@ -99,3 +100,11 @@ class PresignResponse(BaseModel):
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
+
+
+class SettingsOut(BaseModel):
+    layout: MenuLayout
+
+
+class SettingsUpdate(BaseModel):
+    layout: MenuLayout
