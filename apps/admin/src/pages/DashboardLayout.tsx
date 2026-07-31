@@ -1,11 +1,12 @@
 import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import { Button } from "@menu/ui";
-import { LayoutGrid, Package, PlusCircle, LogOut } from "lucide-react";
+import { LayoutGrid, Package, PlusCircle, Settings, LogOut } from "lucide-react";
 
 const navItems = [
   { to: "/categories", label: "Categorías", icon: LayoutGrid },
   { to: "/products", label: "Productos", icon: Package },
   { to: "/addons", label: "Adicionales", icon: PlusCircle },
+  { to: "/settings", label: "Configuración", icon: Settings },
 ];
 
 export default function DashboardLayout() {

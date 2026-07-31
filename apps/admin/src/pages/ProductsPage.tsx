@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { getProducts, createProduct, updateProduct, deleteProduct } from "@menu/api-client";
 import type { Product, ProductCreate } from "@menu/types";
-import { Button, Input, Badge, Card, CardHeader, CardTitle, CardContent } from "@menu/ui";
+import { Button, Badge, Card, CardHeader, CardTitle, CardContent } from "@menu/ui";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import ProductForm from "../components/ProductForm";
 
@@ -94,59 +94,62 @@ export default function ProductsPage() {
         </Card>
       )}
 
-      <div className="space-y-2">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
         {products.map((product) => (
           <div
             key={product.id}
-            className="flex items-center gap-4 p-3 rounded-lg border bg-card"
+            className="flex h-full flex-col overflow-hidden rounded-xl border bg-card"
           >
             {product.image_url && (
               <img
                 src={product.image_url}
                 alt={product.name}
-                className="h-14 w-14 rounded-md object-cover shrink-0"
+                className="aspect-[4/3] w-full object-cover"
               />
             )}
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <p className="font-medium truncate">{product.name}</p>
+            <div className="flex flex-1 flex-col p-3">
+              <div className="flex items-start justify-between gap-2">
+                <p className="font-medium line-clamp-1">{product.name}</p>
                 <Badge
                   variant={product.status === "active" ? "success" : "warning"}
-                  className="text-xs"
+                  className="shrink-0 text-xs"
                 >
                   {product.status === "active" ? "Activo" : "Suspendido"}
                 </Badge>
               </div>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground mt-1">
                 ${Number(product.base_price).toFixed(2)}
                 {product.addons.length > 0 &&
                   ` · ${product.addons.length} adicionales`}
               </p>
+              <div className="mt-auto flex items-center gap-1 pt-3">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex-1"
+                  onClick={() => handleToggleStatus(product)}
+                >
+                  {product.status === "active" ? "Suspender" : "Activar"}
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => {
+                    setEditing(product);
+                    setShowForm(true);
+                  }}
+                >
+                  <Pencil className="h-4 w-4" />
+                </Button>
+                <Button variant="ghost" size="icon" onClick={() => handleDelete(product.id)}>
+                  <Trash2 className="h-4 w-4 text-destructive" />
+                </Button>
+              </div>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handleToggleStatus(product)}
-            >
-              {product.status === "active" ? "Suspender" : "Activar"}
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => {
-                setEditing(product);
-                setShowForm(true);
-              }}
-            >
-              <Pencil className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="icon" onClick={() => handleDelete(product.id)}>
-              <Trash2 className="h-4 w-4 text-destructive" />
-            </Button>
           </div>
         ))}
         {products.length === 0 && (
-          <p className="text-muted-foreground text-center py-8">
+          <p className="text-muted-foreground text-center py-8 col-span-full">
             No hay productos. Creá el primero.
           </p>
         )}
