@@ -4,23 +4,25 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 20 14.3% 4.1%;
-    --card: 0 0% 100%;
-    --card-foreground: 20 14.3% 4.1%;
-    --primary: 24 95% 53%;
-    --primary-foreground: 60 9.1% 97.8%;
-    --secondary: 60 4.8% 95.9%;
-    --secondary-foreground: 24 9.8% 10%;
-    --muted: 60 4.8% 95.9%;
-    --muted-foreground: 25 5.3% 44.7%;
-    --accent: 60 4.8% 95.9%;
-    --accent-foreground: 24 9.8% 10%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 60 9.1% 97.8%;
-    --border: 20 5.9% 90%;
-    --input: 20 5.9% 90%;
-    --ring: 24 95% 53%;
+    --background: 43 80% 97%;
+    --foreground: 34 24% 22%;
+    --card: 48 100% 99%;
+    --card-foreground: 34 24% 22%;
+    --popover: 45 60% 99%;
+    --popover-foreground: 34 24% 22%;
+    --primary: 24 60% 38%;
+    --primary-foreground: 45 80% 97%;
+    --secondary: 40 45% 93%;
+    --secondary-foreground: 34 20% 30%;
+    --muted: 42 40% 94%;
+    --muted-foreground: 32 14% 45%;
+    --accent: 35 45% 90%;
+    --accent-foreground: 34 20% 30%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 60 9% 98%;
+    --border: 40 25% 88%;
+    --input: 40 25% 88%;
+    --ring: 24 60% 38%;
     --radius: 0.5rem;
   }
 }
@@ -31,5 +33,15 @@
   }
   body {
     @apply bg-background text-foreground antialiased;
+  }
+}
+
+@layer utilities {
+  .font-serif {
+    font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  }
+  .font-sans {
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+      "Helvetica Neue", Arial, sans-serif;
   }
 }
