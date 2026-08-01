@@ -11,7 +11,8 @@ __pycache__
 *.sqlite3
 backend/app/static/
 
-# Prototipo de referencia (no se trackea)
+# Prototipos de referencia (no se trackean)
 carta-digital/
+carta-digital-demo/
 # Auxiliar de trabajo local
 urls_imagenes.txt
