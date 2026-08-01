@@ -1,34 +1,23 @@
-import os
-import uuid
-import shutil
+from fastapi import APIRouter, Depends, File, UploadFile
 
-from fastapi import APIRouter, UploadFile, File
-
+from app.deps import get_upload_service
 from app.schemas import PresignRequest, PresignResponse
+from app.services import UploadService
 
 router = APIRouter(prefix="/uploads", tags=["uploads"])
 
-UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "..", "static", "products")
-os.makedirs(UPLOAD_DIR, exist_ok=True)
-
 
 @router.post("/presign", response_model=PresignResponse)
-def presign_upload(data: PresignRequest):
-    ext = data.filename.rsplit(".", 1)[-1] if "." in data.filename else "jpg"
-    key = f"products/{uuid.uuid4()}.{ext}"
-
-    upload_url = f"/uploads/local/{key}"
-    public_url = f"http://localhost:8000{upload_url}"
-    return PresignResponse(upload_url=upload_url, public_url=public_url)
+def presign_upload(
+    data: PresignRequest, service: UploadService = Depends(get_upload_service)
+):
+    """Genera las URLs de subida y pública para una imagen nueva."""
+    return service.presign(data)
 
 
 @router.post("/local")
-async def upload_local(file: UploadFile = File(...)):
-    ext = file.filename.rsplit(".", 1)[-1] if "." in file.filename else "jpg"
-    filename = f"{uuid.uuid4()}.{ext}"
-    filepath = os.path.join(UPLOAD_DIR, filename)
-
-    with open(filepath, "wb") as f:
-        shutil.copyfileobj(file.file, f)
-
-    return {"upload_url": f"/uploads/local/products/{filename}", "public_url": f"http://localhost:8000/uploads/local/products/{filename}"}
+def upload_local(
+    file: UploadFile = File(...), service: UploadService = Depends(get_upload_service)
+):
+    """Guarda una imagen en disco y devuelve sus URLs."""
+    return service.save_local(file)

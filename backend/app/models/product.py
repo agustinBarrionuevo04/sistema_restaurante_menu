@@ -1,12 +1,11 @@
 import uuid
 from decimal import Decimal
-from enum import Enum
-from typing import Optional
+from enum import StrEnum
 
-from sqlmodel import SQLModel, Field, Relationship
+from sqlmodel import Field, Relationship, SQLModel
 
 
-class ProductStatus(str, Enum):
+class ProductStatus(StrEnum):
     ACTIVE = "active"
     SUSPENDED = "suspended"
 
@@ -19,8 +18,10 @@ class Product(SQLModel, table=True):
     name: str = Field(max_length=255)
     description: str = Field(default="")
     base_price: Decimal = Field(max_digits=10, decimal_places=2)
-    image_url: Optional[str] = Field(default=None)
+    image_url: str | None = Field(default=None)
     status: ProductStatus = Field(default=ProductStatus.ACTIVE)
 
     category: "Category" = Relationship(back_populates="products")
-    product_addons: list["ProductAddOn"] = Relationship(back_populates="product", cascade_delete=True)
+    product_addons: list["ProductAddOn"] = Relationship(
+        back_populates="product", cascade_delete=True
+    )

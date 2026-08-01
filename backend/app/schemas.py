@@ -1,11 +1,10 @@
 import uuid
 from decimal import Decimal
-from typing import Optional
 
 from pydantic import BaseModel
 
-from app.models.product import ProductStatus
 from app.models.app_settings import MenuLayout
+from app.models.product import ProductStatus
 
 
 class CategoryCreate(BaseModel):
@@ -14,8 +13,8 @@ class CategoryCreate(BaseModel):
 
 
 class CategoryUpdate(BaseModel):
-    name: Optional[str] = None
-    order: Optional[int] = None
+    name: str | None = None
+    order: int | None = None
 
 
 class CategoryOut(BaseModel):
@@ -31,17 +30,17 @@ class ProductCreate(BaseModel):
     name: str
     description: str = ""
     base_price: Decimal
-    image_url: Optional[str] = None
+    image_url: str | None = None
     status: ProductStatus = ProductStatus.ACTIVE
 
 
 class ProductUpdate(BaseModel):
-    category_id: Optional[uuid.UUID] = None
-    name: Optional[str] = None
-    description: Optional[str] = None
-    base_price: Optional[Decimal] = None
-    image_url: Optional[str] = None
-    status: Optional[ProductStatus] = None
+    category_id: uuid.UUID | None = None
+    name: str | None = None
+    description: str | None = None
+    base_price: Decimal | None = None
+    image_url: str | None = None
+    status: ProductStatus | None = None
 
 
 class AddOnOut(BaseModel):
@@ -54,7 +53,7 @@ class AddOnOut(BaseModel):
 
 class ProductAddOnOut(BaseModel):
     addon: AddOnOut
-    price_override: Optional[Decimal] = None
+    price_override: Decimal | None = None
 
     model_config = {"from_attributes": True}
 
@@ -65,7 +64,7 @@ class ProductOut(BaseModel):
     name: str
     description: str
     base_price: Decimal
-    image_url: Optional[str] = None
+    image_url: str | None = None
     status: ProductStatus
     addons: list[ProductAddOnOut] = []
 
@@ -78,13 +77,13 @@ class AddOnCreate(BaseModel):
 
 
 class AddOnUpdate(BaseModel):
-    name: Optional[str] = None
-    default_price: Optional[Decimal] = None
+    name: str | None = None
+    default_price: Decimal | None = None
 
 
 class ProductAddOnCreate(BaseModel):
     addon_id: uuid.UUID
-    price_override: Optional[Decimal] = None
+    price_override: Decimal | None = None
 
 
 class PresignRequest(BaseModel):

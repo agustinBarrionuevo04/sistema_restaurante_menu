@@ -1,9 +1,9 @@
-from enum import Enum
+from enum import StrEnum
 
-from sqlmodel import SQLModel, Field
+from sqlmodel import Field, SQLModel
 
 
-class MenuLayout(str, Enum):
+class MenuLayout(StrEnum):
     LIST = "list"
     GRID = "grid"
     CAROUSEL = "carousel"

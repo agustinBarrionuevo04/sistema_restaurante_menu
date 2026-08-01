@@ -1,7 +1,7 @@
 import uuid
 from decimal import Decimal
 
-from sqlmodel import SQLModel, Field, Relationship
+from sqlmodel import Field, Relationship, SQLModel
 
 
 class AddOn(SQLModel, table=True):
@@ -11,4 +11,6 @@ class AddOn(SQLModel, table=True):
     name: str = Field(max_length=255)
     default_price: Decimal = Field(max_digits=10, decimal_places=2)
 
-    product_addons: list["ProductAddOn"] = Relationship(back_populates="addon", cascade_delete=True)
+    product_addons: list["ProductAddOn"] = Relationship(
+        back_populates="addon", cascade_delete=True
+    )

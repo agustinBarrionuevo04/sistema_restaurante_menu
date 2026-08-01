@@ -1,6 +1,6 @@
 import uuid
 
-from sqlmodel import SQLModel, Field, Relationship
+from sqlmodel import Field, Relationship, SQLModel
 
 
 class Category(SQLModel, table=True):
