@@ -6,7 +6,7 @@ from sqlmodel import SQLModel
 
 from alembic import context
 
-from app.models import Category, Product, AddOn, ProductAddOn
+from app.models import Category, Product, AddOn, ProductAddOn, AppSettings
 
 config = context.config
 
