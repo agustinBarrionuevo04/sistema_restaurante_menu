@@ -18,13 +18,38 @@ dependencies = [
   "python-multipart>=0.0.18",
   "boto3>=1.36.0",
   "pydantic>=2.10.0",
+  "pydantic-settings>=2.7.0",
 ]
 
 [project.optional-dependencies]
 dev = [
   "pytest>=8.3.0",
-  "httpx>=0.28.0",
+  "httpx2>=0.28.0",
+  "ruff>=0.8.0",
 ]
 
 [tool.hatch.build.targets.wheel]
 packages = ["app"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+src = ["app", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "UP", "B"]
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+# Depends(...) como default en dependencias y endpoints es el patrón canónico de FastAPI
+"app/deps.py" = ["B008"]
+"app/routers/*.py" = ["B008"]
+"app/services/*.py" = ["B008"]
+# Forward references en modelos SQLModel (resuelve el framework en runtime)
+"app/models/*.py" = ["F821"]
+# Re-exportaciones intencionales en __init__ (aggregator del paquete)
+"app/__init__.py" = ["F401"]
+"app/routers/__init__.py" = ["F401"]
